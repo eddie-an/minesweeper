@@ -2,9 +2,9 @@ import { useGame } from "../context/GameContext";
 import Tile from './Tile.jsx'
 
 function Board() {
-    const { board } = useGame();
+    const { board, colSize } = useGame();
     return (
-        <div id="board">
+        <div id="board"  style={{"--cols": colSize}}>
             {board.map((arr, rowNum)=> {
                 return (
                     <div key={rowNum} className="row">

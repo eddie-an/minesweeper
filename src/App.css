@@ -1,45 +1,163 @@
-#outer {
+#main {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: 100%;
 }
 
-#heading {
-
+header {
+  font-family:'Courier New', Courier, monospace;
 }
 
-#game {
-  
+#settings-section {
+  display: flex;
+  flex-direction: row;
+}
+
+.settings-button-container {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.settings-button-container > button {
+  outline: none;
+  border: none;
+  width: 8rem;
+  height: 2rem;
+  background-color: rgb(178, 243, 243);
+  border-radius: 0.5rem;
+}
+
+#game-section {
+  display: flex;
+  flex-direction: column;
+}
+
+#game-info-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  gap: 0.8rem;
+}
+
+.hud-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  min-width: 90px;
+  height: 34px;
+
+  background: #0b1220;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+
+  font-family: monospace;
+  font-weight: 700;
+  color: white;
+}
+
+
+.mine-counter img {
+  width: 16px;
+  height: 16px;
+}
+
+.game-state {
+  flex: 1;
+  text-align: center;
+}
+
+.game-state.playing {
+  background: #1e293b;
+}
+
+.game-state.won {
+  background: #16a34a;
+}
+
+.game-state.lost {
+  background: #dc2626;
+}
+
+#board-wrapper {
+  max-width: 90vw;
+  max-height: 80vh;
 }
 
 #board {
   display: flex;
   flex-direction: column;
+  gap: 0;
+  --cols: 10; /* default fallback */
+  --tile-size: min(40px, calc(78vw / var(--cols)));
+  background: #0b1220;
+  padding: 6px;
+
+  border: 1px solid #1e293b;
+  border-radius: 10px;
 }
+
+
 
 .row {
   display: flex;
   flex-direction: row;
+  gap: 0;
 }
+
 
 .tile {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 3rem;
-  height: 3rem;
-  border: 0.2px solid black;
-  font-size: 1.2rem;
+  width: var(--tile-size);
+  height: var(--tile-size);
+  font-size: calc(var(--tile-size) * 0.5);
+  border: 0.3px solid #0f172a;
   background-color: white;
+
+  font-weight: 700;
+  font-family: Arial, sans-serif;
+
+  user-select: none;
+}
+
+.row:nth-child(even) .tile:not(.clicked-tile):nth-child(even),
+.row:nth-child(odd) .tile:not(.clicked-tile):nth-child(odd) {
+  background: #f2f2f2;
 }
 
 .clicked-tile {
-  background-color: rgb(221, 221, 221);
+  background-color: rgb(171, 171, 171);
+}
+
+.row:nth-child(even) .tile:nth-child(even).clicked-tile {
+  background: #bdbdbd;
+}
+
+.row:nth-child(even) .tile:nth-child(odd).clicked-tile {
+  background: #a1a1a1;
+}
+
+.row:nth-child(odd) .tile:nth-child(even).clicked-tile {
+  background: #a1a1a1;
+}
+
+.row:nth-child(odd) .tile:nth-child(odd).clicked-tile {
+  background: #bdbdbd;
 }
 
 .tile:hover {
   cursor: pointer;
+  filter: brightness(1.05);
 }
 
 .number-tile {
@@ -54,3 +172,21 @@ font-weight: 700;
 .tile-6   { color: #008080; }
 .tile-7 { color: #000000; }
 .tile-8 { color: #636363; }
+
+#try-again-button-container {
+  margin: auto;
+  margin-top: 3rem;
+}
+
+#try-again-button-container > button {
+  outline: none;
+  border: none;
+  width: 14rem;
+  height: 3rem;
+  background-color: rgb(178, 243, 243);
+  border-radius: 0.5rem;
+}
+
+button:hover {
+  cursor: pointer;
+}

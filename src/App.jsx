@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useGame } from "./context/GameContext";
 import './App.css'
 import Board from './components/Board';
+import flag from './assets/flag.svg'
 
 function App() {
 
@@ -12,24 +13,39 @@ function App() {
   },[]);
 
   return (
-      <section id="body">
-        <section id="header">
+      <section id="main">
+        <header>
           <h1>Mine Sweeper</h1>
+        </header>
+        <section id="settings-section">
+          <div className='settings-button-container'>
+            <button onClick={() => restartGame(8, 10, 10)}>Easy</button>
+          </div>
+          <div className='settings-button-container'>
+            <button onClick={() => restartGame(14, 18, 40)}>Medium</button>
+          </div>
+          <div className='settings-button-container'>
+            <button onClick={() => restartGame(20, 24, 99)}>Hard</button>
+          </div>
         </section>
-          <button onClick={() => restartGame(8, 10, 10)}>Easy</button>
-          <button onClick={() => restartGame(14, 18, 40)}>Medium</button>
-          <button onClick={() => restartGame(20, 24, 99)}>Hard</button>
+        <section id="game-section">
+          <div id="game-info-container">
+            <div className="hud-box mine-counter">
+              <img src={flag} alt="Flags" />
+              <span>{numOfMines- numFlags}</span>
+            </div>
+            <div className={`hud-box game-state ${gameState.toLowerCase()}`}>
+              {gameState === "PLAYING" && "Playing"}
+              {gameState === "WON" && "You Win!"}
+              {gameState === "LOST" && "Game Over :("}
+            </div>
+          </div>
+          <div id="board-wrapper">
+            <Board />
+          </div>
 
-        <section id="game">
-          <div>
-            <p>{numOfMines- numFlags}</p>
-          </div>
-          <Board />
-          <div>
-            {gameState}
-          </div>
-          <div>
-            <button id="try-again" onClick={()=>restartGame()}>Try again</button>
+          <div id="try-again-button-container">
+            <button onClick={()=>restartGame()}>Try again</button>
           </div>
         </section>
 
