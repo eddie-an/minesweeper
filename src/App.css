@@ -31,7 +31,11 @@
   height: 3rem;
   border: 0.2px solid black;
   font-size: 1rem;
+  background-color: white;
+}
 
+.clicked-tile {
+  background-color: rgb(201, 199, 199);
 }
 
 .tile:hover {
