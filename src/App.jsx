@@ -16,7 +16,7 @@ function App() {
         <section id="game">
           <Board />
           <div>
-            <button onClick={()=>restartGame()}>Try again</button>
+            <button id="try-again" onClick={()=>restartGame()}>Try again</button>
           </div>
         </section>
 

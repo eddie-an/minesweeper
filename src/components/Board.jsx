@@ -11,7 +11,7 @@ function Board() {
                     {
                         arr.map((elem, colNum)=> {
                             return (
-                                <Tile key={`${rowNum}-${colNum}`} row={rowNum} col={colNum} state={elem}/>
+                                <Tile key={`${rowNum}-${colNum}`} row={rowNum} col={colNum} state={elem.value} flagged={elem.flagged}/>
                             );
                         })
                     }

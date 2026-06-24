@@ -19,7 +19,12 @@ export function GameProvider({ children }) {
         ['M','M','E','E','E','E','E','E','E','E'],
         ['E','M','E','E','M','E','E','E','E','E'],
         ['E','M','E','M','E','E','E','E','M','E']
-    ];
+    ].map(row =>
+        row.map(val => ({
+            value: val,
+            flagged: false
+        }))
+    );
     const [board, setBoard] = useState(initialBoard);
     
     const [numClickedTiles, setNumClickedTiles] = useState(0); // When numClickedTiles is equal to rowSize*colSize - numOfMines, we win
@@ -30,7 +35,7 @@ export function GameProvider({ children }) {
             if (r >= newBoard.length || r < 0 || c >= newBoard[0].length || c < 0) {
                 return;
             }
-            if (newBoard[r][c] != 'E') {
+            if (newBoard[r][c].value != 'E') {
                 return;
             }
 
@@ -42,19 +47,21 @@ export function GameProvider({ children }) {
                 const newR = r+dir[0];
                 const newC = c+dir[1];
                 if (newR < newBoard.length && newR >= 0 && newC < newBoard[0].length && newC >= 0) {
-                    if (newBoard[newR][newC] == 'M' || newBoard[newR][newC] == 'X') {
+                    if (newBoard[newR][newC].value == 'M' || newBoard[newR][newC].value == 'X') {
                         numAdjMines++;
                     }
                 }
             }
             
             if (numAdjMines > 0) {
-                newBoard[r][c] = numAdjMines.toString();
+                newBoard[r][c].value = numAdjMines.toString();
+                newBoard[r][c].flagged = false;
                 setNumClickedTiles(numClickedTiles => numClickedTiles+1);
                 return; // Early return when there are one or more adjacent mine(s)
             }
             else {
-                newBoard[r][c] = 'B'; // Revealed square with no adjacent mines
+                newBoard[r][c].value = 'B'; // Revealed square with no adjacent mines
+                newBoard[r][c].flagged = false;
                 setNumClickedTiles(numClickedTiles => numClickedTiles+1);
             }
             
@@ -66,34 +73,54 @@ export function GameProvider({ children }) {
                     dfs(newR, newC, visited);
                 }
             }
-            return;
         }; // end of nested DFS function
-        let newBoard = structuredClone(board);
-        if (r >= newBoard.length || r < 0 || c >= newBoard[0].length || c < 0) {
-            return newBoard;
+        
+        if (r >= board.length || r < 0 || c >= board[0].length || c < 0) {
+            return;
         }
-        if (newBoard[r][c] == 'M') {
+        if (board[r][c].flagged === true || gameState !== "PLAYING") {
+            return;
+        }
+        if (board[r][c].value == 'M') {
             handleLoss(); // Game over
             return;
         }
-
+        let newBoard = structuredClone(board);
+        
         const visited = new Set();
         dfs(r, c, visited);
         setBoard(newBoard);
-        return;
     }; // end of updateBoard function
 
-    const revealMines = (originalBoard) => {
-        let board = structuredClone(originalBoard);
-        for (let i=0; i<board.length; i++) {
-            for (let j=0; j<board[0].length; j++) {
-                if (board[i][j] == 'M') {
-                    board[i][j] = 'X'; 
+
+    const revealMines = (board) => {
+        let newBoard = structuredClone(board);
+        for (let i=0; i<newBoard.length; i++) {
+            for (let j=0; j<newBoard[0].length; j++) {
+                if (newBoard[i][j].value == 'M') {
+                    newBoard[i][j].value = 'X';
+                    newBoard[i][j].flagged = false;
                 }
             }
         }
-        setBoard(board);
+        setBoard(newBoard);
     }
+
+
+    const toggleFlag = (r,c) => {
+        if (r >= board.length || r < 0 || c >= board[0].length || c < 0) {
+            return;
+        }
+        if (board[r][c].value !== 'M' && board[r][c].value !== 'E' || gameState !== "PLAYING") {
+            return;
+        }
+        let newBoard = structuredClone(board);
+        newBoard[r][c].flagged = !newBoard[r][c].flagged;
+        setBoard(newBoard);
+        
+
+    };
+
 
     const restartGame = () => {
         setGameState("PLAYING");
@@ -101,10 +128,12 @@ export function GameProvider({ children }) {
         setNumClickedTiles(0);
     }
 
+
     const handleLoss = () => {
         setGameState("LOST");
         revealMines(board);
     }
+    
 
     useEffect(()=> {
         if (gameState == "PLAYING" && numClickedTiles == rowSize*colSize - numOfMines) {
@@ -119,6 +148,7 @@ export function GameProvider({ children }) {
         board,
         setBoard,
         updateBoard,
+        toggleFlag,
         restartGame,
         gameState
     }}>
