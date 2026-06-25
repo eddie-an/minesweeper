@@ -6,8 +6,10 @@ import flag from './assets/flag.svg'
 
 function App() {
 
+  // global states and functions
   const { rowSize, setRowSize, colSize, setColSize, numOfMines, setNumOfMines, restartGame, numFlags, gameState } = useGame();
 
+  // Execute restartGame function when the page is first loaded to initialize the board and set the mines.
   useEffect(()=> {
     restartGame();
   },[]);
